@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <iomanip> // For formatting time
 
 using namespace std;
 
@@ -8,7 +9,7 @@ public:
     int hunger;
     int happiness;
     int energy;
-    
+
     Pet() : hunger(50), happiness(50), energy(50) {}
 
     void showStatus() {
@@ -51,6 +52,14 @@ public:
         }
     }
 
+    // Time-based decay (per minute)
+    void timePasses() {
+        if (hunger > 0) hunger -= 1;
+        if (happiness > 0) happiness -= 1;
+        if (energy > 0) energy -= 1;
+        cout << "Time passes... Hunger -1, Happiness -1, Energy -1\n";
+    }
+
 private:
     void decreaseEnergy() {
         if (energy > 10) {
@@ -63,22 +72,57 @@ private:
     }
 };
 
+// Clock class to manage time
+class Clock {
+public:
+    int hour;
+    int minute;
+
+    Clock() : hour(12), minute(0) {}
+
+    void showTime() {
+        cout << "Current time: " << setw(2) << setfill('0') << hour 
+             << ":" << setw(2) << setfill('0') << minute << "\n";
+    }
+
+    void setTime(int h, int m) {
+        hour = h % 24;
+        minute = m % 60;
+        cout << "Time set to: " << setw(2) << setfill('0') << hour 
+             << ":" << setw(2) << setfill('0') << minute << "\n";
+    }
+
+    void advanceTime() {
+        minute++;
+        if (minute >= 60) {
+            minute = 0;
+            hour = (hour + 1) % 24;
+        }
+        showTime();
+    }
+};
+
 void showMenu() {
     cout << "\n--- Menu ---\n";
     cout << "1. Feed\n";
     cout << "2. Play\n";
     cout << "3. Rest\n";
     cout << "4. Show Status\n";
-    cout << "5. Quit\n";
+    cout << "5. Set Time\n";
+    cout << "6. Advance Time (1 minute)\n";
+    cout << "7. Quit\n";
     cout << "----------------\n";
     cout << "Choose an action: ";
 }
 
 int main() {
     Pet myPet;
+    Clock myClock;
     int choice;
+    int hour, minute;
 
     while (true) {
+        myClock.showTime();
         showMenu();
         cin >> choice;
 
@@ -96,6 +140,15 @@ int main() {
                 myPet.showStatus();
                 break;
             case 5:
+                cout << "Set current time (hour minute): ";
+                cin >> hour >> minute;
+                myClock.setTime(hour, minute);
+                break;
+            case 6:
+                myClock.advanceTime();
+                myPet.timePasses(); // Each minute affects the pet
+                break;
+            case 7:
                 cout << "Goodbye!\n";
                 return 0;
             default:
