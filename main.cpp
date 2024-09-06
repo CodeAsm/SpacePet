@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <iomanip> // For formatting time
+#include <limits>
 
 using namespace std;
 
@@ -102,6 +103,17 @@ public:
     }
 };
 
+// Function to get valid integer input
+int getValidChoice() {
+    int value;
+    while (!(cin >> value)) {
+        cout << "Invalid input. Please enter a number: ";
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+    }
+    return value;
+}
+
 void showMenu() {
     cout << "\n--- Menu ---\n";
     cout << "1. Feed\n";
@@ -124,7 +136,7 @@ int main() {
     while (true) {
         myClock.showTime();
         showMenu();
-        cin >> choice;
+        choice = getValidChoice(); // Use the function to get a valid choice
 
         switch (choice) {
             case 1:
@@ -140,8 +152,12 @@ int main() {
                 myPet.showStatus();
                 break;
             case 5:
-                cout << "Set current time (hour minute): ";
-                cin >> hour >> minute;
+                cout << "Set current time (type hour (enter/return) then minute): ";
+                while (!(cin >> hour >> minute)) {
+                    cout << "Invalid input. Please enter numeric values for hour and minute: ";
+                    cin.clear(); // Clear the error flag
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+                }
                 myClock.setTime(hour, minute);
                 break;
             case 6:
