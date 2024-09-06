@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include <iomanip> // For formatting time
-#include <limits>
+#include <iomanip>  // For formatting time
+#include <limits>   // For numeric_limits
 
 using namespace std;
 
@@ -10,14 +10,18 @@ public:
     int hunger;
     int happiness;
     int energy;
+    string activityState; // e.g., "sleeping", "walking", "playing", "sitting"
+    string moodState;     // e.g., "angry", "neutral", "happy"
 
-    Pet() : hunger(50), happiness(50), energy(50) {}
+    Pet() : hunger(50), happiness(50), energy(50), activityState("sitting"), moodState("neutral") {}
 
     void showStatus() {
         cout << "\n--- Pet Status ---\n";
         cout << "Hunger: " << hunger << "/100\n";
         cout << "Happiness: " << happiness << "/100\n";
         cout << "Energy: " << energy << "/100\n";
+        cout << "Activity: " << activityState << "\n";
+        cout << "Mood: " << moodState << "\n";
         cout << "------------------\n";
     }
 
@@ -30,6 +34,7 @@ public:
             cout << "Your pet is full!\n";
         }
         decreaseEnergy();
+        updateActivityState();
     }
 
     void play() {
@@ -41,6 +46,7 @@ public:
             cout << "Your pet is very happy!\n";
         }
         decreaseEnergy();
+        updateActivityState();
     }
 
     void rest() {
@@ -51,6 +57,7 @@ public:
             energy = 100;
             cout << "Your pet is fully rested!\n";
         }
+        updateMoodState();
     }
 
     // Time-based decay (per minute)
@@ -59,6 +66,7 @@ public:
         if (happiness > 0) happiness -= 1;
         if (energy > 0) energy -= 1;
         cout << "Time passes... Hunger -1, Happiness -1, Energy -1\n";
+        updateMoodState(); // Update mood based on current happiness level
     }
 
 private:
@@ -69,6 +77,26 @@ private:
         } else {
             energy = 0;
             cout << "Your pet is too tired!\n";
+        }
+    }
+
+    void updateActivityState() {
+        if (energy < 20) {
+            activityState = "sleeping";
+        } else if (happiness < 30) {
+            activityState = "sitting";
+        } else {
+            activityState = "playing";
+        }
+    }
+
+    void updateMoodState() {
+        if (happiness < 30) {
+            moodState = "angry";
+        } else if (happiness < 70) {
+            moodState = "neutral";
+        } else {
+            moodState = "happy";
         }
     }
 };
