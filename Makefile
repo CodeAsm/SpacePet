@@ -1,41 +1,38 @@
-# Compiler
+# Makefile
+
+# Compiler and flags
 CXX = g++
+CXXFLAGS = -Wall -std=c++11
 
 # Directories
 SRC_DIR = .
-OBJ_DIR = obj
 LIB_DIR = lib
-BIN_DIR = .
+OBJ_DIR = obj
 
-# Libraries
-LIBS = -L$(LIB_DIR) #-lmylib # Replace mylib with actual libraries
-
-# Compiler flags
-CXXFLAGS = -Wall -I$(LIB_DIR) # -I for any custom include paths
-
-# Source and object files
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+# Sources and objects
+SOURCES = $(SRC_DIR)/main.cpp $(SRC_DIR)/pet.cpp $(LIB_DIR)/clock.cpp
+OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o) $(SOURCES:$(LIB_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 # Target executable
-TARGET = $(BIN_DIR)/spacepet
+TARGET = spacepet
 
-# Default rule
+# Build rules
 all: $(TARGET)
 
-# Rule to link the final executable
-$(TARGET): $(OBJ_FILES)
-	@mkdir -p $(BIN_DIR)
-	$(CXX) -o $@ $^ $(LIBS)
+$(TARGET): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS)
 
-# Rule to compile source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(LIB_DIR)/%.cpp
+	@mkdir -p $(OBJ_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Clean up object files and binaries
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(TARGET)
+	rm -f $(OBJ_DIR)/*.o $(TARGET)
 
 # Phony targets
 .PHONY: all clean
