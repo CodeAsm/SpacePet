@@ -10,8 +10,13 @@ LIB_DIR = lib
 OBJ_DIR = obj
 
 # Sources and objects
-SOURCES = $(SRC_DIR)/main.cpp $(SRC_DIR)/pet.cpp $(LIB_DIR)/clock.cpp
-OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o) $(SOURCES:$(LIB_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+SRC_SOURCES = $(SRC_DIR)/main.cpp $(SRC_DIR)/pet.cpp
+LIB_SOURCES = $(LIB_DIR)/clock.cpp
+SRC_OBJECTS = $(SRC_SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+LIB_OBJECTS = $(LIB_SOURCES:$(LIB_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+
+# Combine all objects
+OBJECTS = $(SRC_OBJECTS) $(LIB_OBJECTS)
 
 # Target executable
 TARGET = spacepet
