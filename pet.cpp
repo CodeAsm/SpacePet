@@ -58,7 +58,12 @@ void Pet::timePasses() {
     if (happiness > 0) happiness -= 1;
     if (energy > 0) energy -= 1;
     cout << "Time passes... Hunger -1, Happiness -1, Energy -1\n";
+    if(activityState == "sleeping"){
+        rest();
+        energy += 1; //undo the above
+    }
     updateMoodState(); // Update mood based on current happiness level
+    updateActivityState(); // Update activity, based on mood ( TODO: this might need to change, if keeping track of activity duration or target)
 }
 
 void Pet::decreaseEnergy() {
@@ -71,15 +76,26 @@ void Pet::decreaseEnergy() {
     }
 }
 
+// main activity magic
 void Pet::updateActivityState() {
-    if (energy < 20) {
-        activityState = "sleeping";
-    } else if (happiness < 30) {
-        activityState = "sitting";
-    } else {
-        activityState = "playing";
+
+    if(activityState == "sleeping"){
+        if (happiness < 30) {
+            happiness +=5;
+        }
+    }else{
+        cout << "test";
+        if (energy < 20) {
+            activityState = "sleeping";
+        } else if (happiness < 30) {
+            activityState = "sitting";
+        } else {
+            activityState = "playing";
+            play();
+        }
     }
 }
+
 
 void Pet::updateMoodState() {
     if (happiness < 30) {
